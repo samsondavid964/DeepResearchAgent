@@ -1,8 +1,8 @@
 // Location: app/api/research/route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
-// 1. Correct the import to use 'runResearch'
-import { runResearch } from '@/lib/research'; 
+// This import now correctly matches the function exported from research.ts
+import { runComprehensiveResearch } from '@/lib/research'; 
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,8 +13,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Query is required and must be a string' }, { status: 400 });
     }
 
-    // 2. Correct the function call to use 'runResearch'
-    const researchResult = await runResearch(query);
+    // Call the centralized, advanced research function
+    const researchResult = await runComprehensiveResearch(query);
 
     // Return the result
     return NextResponse.json(researchResult);
