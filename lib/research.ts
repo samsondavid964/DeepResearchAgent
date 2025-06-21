@@ -8,6 +8,10 @@ import { z } from 'zod';
 const firecrawl = new FirecrawlApp({ apiKey: process.env.FIRECRAWL_API_KEY || '' });
 const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// Helper function to create a delay
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// This is our main, high-level function
 export async function runComprehensiveResearch(initialQuery: string) {
   try {
     // STEP 1: AI creates a research plan
@@ -49,6 +53,10 @@ export async function runComprehensiveResearch(initialQuery: string) {
     } catch (e) {
       console.error(`Failed to scrape primary domain ${primaryDomain}:`, e);
     }
+    
+    // Pause for 10 seconds after the primary scrape
+    console.log("--> Pausing for 10 seconds to respect rate limits...");
+    await delay(10000);
 
     // STEP 3 & 4: Iterative Google Search and Scrape using the reliable fetch method
     console.log("-> Step 3 & 4: Executing targeted Google searches and scraping results...");
@@ -73,6 +81,10 @@ export async function runComprehensiveResearch(initialQuery: string) {
           console.error(`Failed to scrape ${topResult.url}:`, e);
         }
       }
+      
+      // **THE ADDED DELAY**: Wait for 10 seconds before the next iteration
+      console.log("--> Pausing for 10 seconds before next search...");
+      await delay(10000); 
     }
 
     // STEP 5: Final Synthesis
